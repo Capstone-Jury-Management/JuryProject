@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Search {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6">
+
+       <h4>Encrypted Juror Data Search Utility</h4>
+       <form action="{{ url_for('search_results') }}" method="POST">
+
+       <label >First Name </label> <br>
+       <input type="text"  name="first_name" class="col-sm-9 col-form-label";?> <br>
+
+       <label>Last Name</label><br>
+       <input type="text"  name="last_name" class="col-sm-9 col-form-label";?><br>
+
+       <label>Date of Birth</label>
+       <label>You can select using the date picker by clicking the icon on the right. </label><br>
+       <input type="date"  name="date_of_birth" class="col-sm-9" ;?><br>
+      
+       <label>Phone</label><br>
+       <input type="text"  name="phone" class="col-sm-9 col-form-label";?><br>
+
+       <label>SSN</label><br>
+       <input type="text" name="ssn" class="col-sm-9 col-form-label";?><br>
+
+       <br> <input type="submit" name="save" value="Search"  class="btn btn-primary";?><br>
+       </form>
+    </div>
+</div>
+{% endblock %}

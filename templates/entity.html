@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <dl class="row">
+    {% for key in key_map %}
+        {% if key in entity %}
+            <dt class="col-sm-3">{{ key_map[key] }}</dt>
+            <dd class="col-sm-9">{{ entity[key] }}</dd>
+        {% endif %}
+    {% endfor %}
+    {% for key in entity %}
+        {% if key not in key_map %}
+            <dt class="col-sm-3">{{ key }}</dt>
+            <dd class="col-sm-9">{{ entity[key] }}</dd>
+        {% endif %}
+    {% endfor %}
+    </dl>
+{% endblock %}
