@@ -59,3 +59,7 @@ def juror_details(id):
         'ssn': 'Social Security Number'
     }
     return render_template('entity.html', title='Juror Details', entity=juror, key_map=key_map)
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
