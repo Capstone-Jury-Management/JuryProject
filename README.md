@@ -1,4 +1,4 @@
-# Juror Search - Backend
+# Jury Management System
 
 ## Backend Routes
 
