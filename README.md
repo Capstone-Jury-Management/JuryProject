@@ -18,7 +18,7 @@
     `mvc_id=[string]`
 
 ### Participant
-  Fetches juror details associated with the given participant_id.
+  Fetches participant details associated with the given participant_id.
 
 * **URL:**
     /participant
