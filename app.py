@@ -11,13 +11,14 @@ app = Flask(__name__)
 
 def main():
     requests.packages.urllib3.disable_warnings()  # Disable SSL warnings.
+    app.run(debug=True, host='0.0.0.0')
 
-
+    
 @app.route('/search', methods=['POST'])
 def search():
     """
-    Form a JSON response with a list of jury participants that match the data 
-    parameters in the POST request.
+    Form a JSON response with a list of jury participants that match given
+    search parameters.
     """
 
     # Set default response.
@@ -50,7 +51,7 @@ def search():
         search['mvc_id'] = tokenize(request.form['mvc_id'])
 
     for i, condition in enumerate(search.keys()):
-        if (i != 0):
+        if (i > 0):
             query += ' AND'
         query += ' ' + condition + ' = %s'
 
@@ -89,13 +90,47 @@ def search():
 @app.route('/participant', methods=['POST'])
 def participant():
     """
-    Form a JSON response with the details for the jury participant that matches
-    the id given in the POST request.
+    Form a JSON response with details for the jury participant associated with
+    the given participant_id.
     """
 
     # Set default response.
     response = {'success': 0}
-    
+
+    # Abort on bad request.
+    if 'participant_id' not in request.form:
+        abort(400, 'Bad Request. Check data parameters.')
+
+    try:
+        url = 'jury-test-database-1.cuy4fcuqkw4f.us-east-1.rds.amazonaws.com'
+        cnx = mysql.connector.connect(host=url,
+                                      user='admin',
+                                      password='NJCourts',
+                                      database='JURY-TEST-DATABASE-1')
+
+        query = 'SELECT * FROM PARTICIPANTS WHERE participant_id = %s'
+        cursor = cnx.cursor(buffered=True)
+        cursor.execute(query, tuple(request.form['participant_id']))
+
+        if (cursor.rowcount == 0):
+            return response
+
+        row = cursor.fetchone()
+        key = cursor.column_names
+        for i in range(len(row)):
+            if key[i] == 'dob' or key[i] == 'ssn' or key[i] == 'mvc_id':
+                response[key[i]] = detokenize(row[i])
+            else:
+                response[key[i]] = row[i]
+
+        cursor.close()
+        cnx.close()
+
+    except Exception as e:
+        abort(500, 'Internal Server Error. ' + str(e))
+
+    response['success'] = 1
+
     return response
 
 
@@ -122,7 +157,7 @@ def internal_server_error(error):
 
 
 def tokenize(data):
-    """Return an encrypted string using the IBM Guardium API."""
+    """Return tokenized data using the IBM Guardium API."""
 
     url = 'https://dpqa.aocnp.njcourts.gov:2155/vts/rest/v2.0/tokenize'
     data = {'data': data, 'tokengroup': 'NJITGrp', 'tokentemplate': 'NJITTmpl'}
@@ -132,7 +167,7 @@ def tokenize(data):
 
 
 def detokenize(token):
-    """Return a decrypted token using the IBM Guardium API."""
+    """Return detokenized data using the IBM Guardium API."""
 
     url = 'https://dpqa.aocnp.njcourts.gov:2155/vts/rest/v2.0/detokenize'
     data = {'token': token, 'tokengroup': 'NJITGrp', 
@@ -144,4 +179,3 @@ def detokenize(token):
 
 if __name__ == '__main__':
     main()
-    app.run(debug=True, host='0.0.0.0')
