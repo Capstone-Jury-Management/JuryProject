@@ -15,7 +15,7 @@
     `last_name=[string]`\
     `birth_date=[string]`\
     `ssn=[string]`\
-    `mvc_id=[string]`\
+    `mvc_id=[string]`
 
 ### Participant
   Fetches juror details associated with the given participant_id.
@@ -25,4 +25,4 @@
 * **Method:**
     `POST`
 * **Data Params:**\
-    `participant_id=[integer]`\
+    `participant_id=[integer]`
