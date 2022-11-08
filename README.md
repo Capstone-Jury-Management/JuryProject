@@ -7,7 +7,7 @@
   parameters. At least one data paramater is required.
 
 * **URL:**
-    /search
+    /api/search
 * **Method:**
     `POST`
 * **Data Params:**\
@@ -21,7 +21,7 @@
   Fetches participant details associated with the given participant_id.
 
 * **URL:**
-    /participant
+    /api/participant
 * **Method:**
     `POST`
 * **Data Params:**\

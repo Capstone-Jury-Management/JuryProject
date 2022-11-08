@@ -14,7 +14,7 @@ def main():
     app.run(debug=True, host='0.0.0.0')
 
     
-@app.route('/search', methods=['POST'])
+@app.route('/api/search', methods=['POST'])
 def search():
     """
     Form a JSON response with a list of jury participants that match given
@@ -87,7 +87,7 @@ def search():
     return response
 
 
-@app.route('/participant', methods=['POST'])
+@app.route('/api/participant', methods=['POST'])
 def participant():
     """
     Form a JSON response with details for the jury participant associated with
