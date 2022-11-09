@@ -3,6 +3,10 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
+<h4>{{ title }}</h4>
+{% if 'error_message' in entities %}
+    <p>{{ entities['error_message']}}</p>
+{% else %}
     <table class="table">
         <thead>
             <tr>
@@ -20,7 +24,7 @@
         </thead>
         <tbody>
             {% for entity in entities %}
-                <tr class="clickable" onclick="window.location='{{ request.host_url[:-1] + url_for('juror_details', id=entity['juror_id']) }}'">
+                <tr class="clickable" onclick="window.location='{{ request.host_url[:-1] + url_for('juror_details', id=entity['participant_id']) }}'">
                     {% for key in key_map %}
                         {% if key in entity %}
                             <td>{{ entity[key] }}</td>
@@ -35,4 +39,5 @@
             {% endfor %}
         </tbody>
     </table>
+{% endif %}
 {% endblock %}

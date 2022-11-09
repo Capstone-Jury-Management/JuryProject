@@ -3,6 +3,10 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
+<h4>{{ title }}</h4>
+{% if 'error_message' in entity %}
+    <p>{{ entity['error_message']}}</p>
+{% else %}
     <dl class="row">
     {% for key in key_map %}
         {% if key in entity %}
@@ -17,4 +21,5 @@
         {% endif %}
     {% endfor %}
     </dl>
+{% endif %}
 {% endblock %}

@@ -1,26 +1,33 @@
-import sqlite3
-from fake_data import fake_persons
+import os
+from .access import get_db_connection
+from .fake_data import fake_participants
+from .encryption import tokenize
 
-connection = sqlite3.connect('database.db')
+def init_db():
+    cnx = get_db_connection()
+    cursor = cnx.cursor()
 
-with open('schema.sql') as f:
-    connection.executescript(f.read())
+    db_schema_file_path = 'db/schema.sql'
+    # with open(db_schema_file_path) as f:
+    #     cursor.execute(f.read().split(';')[0].strip())
+    #     cnx.commit()
+    with open(db_schema_file_path) as f:
+        cursor.execute(f.read().split(';')[1].strip())
+        cnx.commit()
 
-cur = connection.cursor()
+    cursor.execute('SELECT * FROM PARTICIPANTS LIMIT 1')
+    row = cursor.fetchone()
+    if not row:
+        keys = ['summons_date', 'last_name', 'first_name', 'address', 'city', 'state', 'zip', 'county',
+            'dob', 'ssn', 'mvc_id']
+        encrypted_keys = ['dob', 'ssn', 'mvc_id']
+        query = 'INSERT INTO PARTICIPANTS (' + ', '.join(keys) + ') VALUES (' + \
+            ', '.join(['%s' for _ in keys]) + ')'
+        for participant in fake_participants(100):
+            for key in encrypted_keys:
+                participant[key] = tokenize(str(participant[key]))
+            cursor.execute(query, [participant[key] for key in keys])
+            cnx.commit()
 
-cur.execute('''INSERT INTO JUROR (first_name, last_name, birth_date, phone)
-    VALUES ("David", "Cohen", "2000-03-21", "7325466520")''')
-cur.execute('''INSERT INTO JUROR (first_name, last_name, birth_date, phone)
-    VALUES ("Yash", "Patel", "2000-01-01", "9735192324")''')
-cur.execute('''INSERT INTO JUROR (first_name, last_name, birth_date, phone)
-    VALUES ("Cassandra", "Sehic", "2000-07-31", "7322442946")''')
-cur.execute('''INSERT INTO JUROR (first_name, last_name, birth_date, phone)
-    VALUES ("Kush", "Patel", "2000-01-01", "2185136493")''')
-
-for juror in fake_persons(1000):
-    cur.execute('INSERT INTO JUROR (first_name, last_name, birth_date, phone, ssn) VALUES (?, ?, ?, ?, ?)',
-        (juror['first_name'], juror['last_name'], juror['birth_date'], juror['phone'], juror['ssn'])
-    )
-
-connection.commit()
-connection.close()
+    cursor.close()
+    cnx.close()

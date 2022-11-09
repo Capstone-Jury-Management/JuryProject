@@ -1,4 +1,8 @@
+__pycache__/
 *.pyc
 .devcontainer
 .vscode
-__pycache__
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
