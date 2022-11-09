@@ -12,6 +12,7 @@ def fake_participants(n=10):
     for _ in range(n):
         fake_participant = OrderedDict()
         fake_participant['summons_date'] = fake.date_between(start_date='-3y', end_date='today')
+        fake_participant['undeliverable'] = random.choice([0, 1])
         fake_participant['last_name'] = fake.last_name()
         fake_participant['first_name'] = fake.first_name()
         fake_participant['address'] = fake.street_address()

@@ -47,7 +47,7 @@ def search_jurors(**kwargs):
     return result_to_list_of_OrderedDict(result, keys, encrypted_keys)
 
 def get_juror(juror_id):
-    keys = ['participant_id', 'summons_date', 'last_name', 'first_name', 'address', 'city', 'state', 'zip', 'county',
+    keys = ['participant_id', 'summons_date', 'undeliverable', 'last_name', 'first_name', 'address', 'city', 'state', 'zip', 'county',
             'dob', 'ssn', 'mvc_id']
     encrypted_keys = ['dob', 'ssn', 'mvc_id']
     query = 'SELECT ' + ', '.join(keys) + ' FROM PARTICIPANTS WHERE participant_id = ' + juror_id

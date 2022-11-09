@@ -64,6 +64,7 @@ def juror_details(id):
         key_map = {
             'participant_id': 'ID',
             'summons_date': 'Summons Date',
+            'undeliverable': '1 means Undeliverable',
             'last_name': 'Last Name',
             'first_name': 'First Name',
             'address': 'Street Address',

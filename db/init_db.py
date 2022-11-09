@@ -8,9 +8,9 @@ def init_db():
     cursor = cnx.cursor()
 
     db_schema_file_path = 'db/schema.sql'
-    # with open(db_schema_file_path) as f:
-    #     cursor.execute(f.read().split(';')[0].strip())
-    #     cnx.commit()
+    with open(db_schema_file_path) as f:
+        cursor.execute(f.read().split(';')[0].strip())
+        cnx.commit()
     with open(db_schema_file_path) as f:
         cursor.execute(f.read().split(';')[1].strip())
         cnx.commit()
@@ -18,7 +18,7 @@ def init_db():
     cursor.execute('SELECT * FROM PARTICIPANTS LIMIT 1')
     row = cursor.fetchone()
     if not row:
-        keys = ['summons_date', 'last_name', 'first_name', 'address', 'city', 'state', 'zip', 'county',
+        keys = ['summons_date', 'undeliverable', 'last_name', 'first_name', 'address', 'city', 'state', 'zip', 'county',
             'dob', 'ssn', 'mvc_id']
         encrypted_keys = ['dob', 'ssn', 'mvc_id']
         query = 'INSERT INTO PARTICIPANTS (' + ', '.join(keys) + ') VALUES (' + \
