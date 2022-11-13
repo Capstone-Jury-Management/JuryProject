@@ -1,8 +1,7 @@
-from flask import Flask
-from flask import abort
-from flask import request
+from flask import Flask, abort, request, render_template, url_for
 
 import mysql.connector
+import os
 import requests
 
 
@@ -14,6 +13,68 @@ def main():
     app.run(debug=True, host='0.0.0.0')
 
     
+# Frontend Routes
+
+
+@app.route('/', methods=['GET'])
+def search_form():
+    return render_template('search_form.html')
+
+
+@app.route('/search_results', methods=['POST'])
+def search_results():
+    response = requests.post(request.host_url + url_for('search'), 
+                             data=request.form).json()
+
+    if (response['success'] == 0):
+        response['participants'] = list()
+
+    key_map = {
+        'participant_id': 'ID',
+        'last_name': 'Last Name',
+        'middle_name': 'Middle Name',
+        'first_name': 'First Name',
+        'dob': 'Date of Birth',
+        'ssn': 'SSN',
+        'mvc_id': 'DMV Number'
+    }
+    return render_template('entities.html', title='Search Results',
+                           entities=response['participants'], key_map=key_map)
+
+
+@app.route('/juror_details/<id>', methods=['GET'])
+def juror_details(id):
+    response = requests.post(request.host_url + url_for('participant'),
+                             data={'participant_id': id}).json()
+    
+    if (response['success'] == 0):
+        error = {'error_message': 'Juror with id ' + id + ' not found.'}
+        return render_template('entity.html', title='Juror Details', 
+                               entity=error, key_map=None)
+
+    key_map = {
+        'participant_id': 'ID',
+        'summons_date': 'Summons Date',
+        'undeliverable': 'Undeliverable',  # 1 is Yes. Use an if statement?
+        'last_name': 'Last Name',          # We should display the values
+        'first_name': 'First Name',        # directly instead of using a loop
+        'address': 'Street Address',       # in the entity.html template so we
+        'city': 'City',                    # can do this.
+        'state': "State",
+        'zip': 'Zip',
+        'county': 'County',
+        'dob': 'Date of Birth',
+        'ssn': 'SSN',
+        'mvc_id': "MVC Number"
+    }
+
+    return render_template('entity.html', title='Juror Details', 
+                           entity=response, key_map=key_map)
+
+
+# Backend Routes
+
+
 @app.route('/api/search', methods=['POST'])
 def search():
     """
@@ -39,15 +100,15 @@ def search():
              'WHERE')
 
     search = dict()
-    if ('first_name' in request.form):
+    if ('first_name' in request.form and request.form['first_name']):
         search['first_name'] = request.form['first_name']
-    if ('last_name' in request.form):
+    if ('last_name' in request.form and request.form['last_name']):
         search['last_name'] = request.form['last_name']
-    if ('dob' in request.form):
+    if ('dob' in request.form and request.form['dob']):
         search['dob'] = tokenize(request.form['dob'])
-    if ('ssn' in request.form):
+    if ('ssn' in request.form and request.form['ssn']):
         search['ssn'] = tokenize(request.form['ssn'])
-    if ('mvc_id' in request.form):
+    if ('mvc_id' in request.form and request.form['mvc_id']):
         search['mvc_id'] = tokenize(request.form['mvc_id'])
 
     for i, condition in enumerate(search.keys()):
@@ -57,13 +118,16 @@ def search():
 
     # Query the database and process the results.
     try:
-        url = 'jury-test-database-1.cuy4fcuqkw4f.us-east-1.rds.amazonaws.com'
-        cnx = mysql.connector.connect(host=url,
-                                      user='admin',
-                                      password='NJCourts',
-                                      database='JURY-TEST-DATABASE-1')
-        cursor = cnx.cursor()
+        cnx = mysql.connector.connect(host=os.environ['RDS_HOSTNAME'],
+                                      user=os.environ['RDS_USERNAME'],
+                                      password=os.environ['RDS_PASSWORD'],
+                                      database=os.environ['RDS_DB_NAME'])
+        cursor = cnx.cursor(buffered=True)
         cursor.execute(query, tuple(search.values()))
+
+        if (cursor.rowcount == 0):
+            response['participants'] = list()
+            return response
 
         # Build JSON response.
         participants = list()
@@ -84,6 +148,8 @@ def search():
     except Exception as e:
         abort(500, 'Internal Server Error. ' + str(e))
 
+    response['success'] = 1
+
     return response
 
 
@@ -102,15 +168,14 @@ def participant():
         abort(400, 'Bad Request. Check data parameters.')
 
     try:
-        url = 'jury-test-database-1.cuy4fcuqkw4f.us-east-1.rds.amazonaws.com'
-        cnx = mysql.connector.connect(host=url,
-                                      user='admin',
-                                      password='NJCourts',
-                                      database='JURY-TEST-DATABASE-1')
+        cnx = mysql.connector.connect(host=os.environ['RDS_HOSTNAME'],
+                                      user=os.environ['RDS_USERNAME'],
+                                      password=os.environ['RDS_PASSWORD'],
+                                      database=os.environ['RDS_DB_NAME'])
 
         query = 'SELECT * FROM PARTICIPANTS WHERE participant_id = %s'
         cursor = cnx.cursor(buffered=True)
-        cursor.execute(query, tuple(request.form['participant_id']))
+        cursor.execute(query, (request.form['participant_id'],))
 
         if (cursor.rowcount == 0):
             return response
@@ -150,7 +215,7 @@ def internal_server_error(error):
     """Handle an internal server error with a JSON response."""
 
     return {
-        'success:': 0,
+        'success': 0,
         'code': error.code,
         'message': error.description
     }
