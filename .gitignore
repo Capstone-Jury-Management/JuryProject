@@ -2,3 +2,4 @@
 .devcontainer
 .vscode
 __pycache__
+env.sh
