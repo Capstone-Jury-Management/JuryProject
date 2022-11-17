@@ -5,23 +5,23 @@ import os
 import requests
 
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 
 def main():
     requests.packages.urllib3.disable_warnings()  # Disable SSL warnings.
-    app.run(debug=True, host='0.0.0.0')
+    application.run(debug=True, host='0.0.0.0')
 
     
 # Frontend Routes
 
 
-@app.route('/', methods=['GET'])
+@application.route('/', methods=['GET'])
 def search_form():
     return render_template('search_form.html')
 
 
-@app.route('/search_results', methods=['POST'])
+@application.route('/search_results', methods=['POST'])
 def search_results():
     response = requests.post(request.host_url + url_for('search'), 
                              data=request.form).json()
@@ -42,7 +42,7 @@ def search_results():
                            entities=response['participants'], key_map=key_map)
 
 
-@app.route('/juror_details/<id>', methods=['GET'])
+@application.route('/juror_details/<id>', methods=['GET'])
 def juror_details(id):
     response = requests.post(request.host_url + url_for('participant'),
                              data={'participant_id': id}).json()
@@ -75,7 +75,7 @@ def juror_details(id):
 # Backend Routes
 
 
-@app.route('/api/search', methods=['POST'])
+@application.route('/api/search', methods=['POST'])
 def search():
     """
     Form a JSON response with a list of jury participants that match given
@@ -153,7 +153,7 @@ def search():
     return response
 
 
-@app.route('/api/participant', methods=['POST'])
+@application.route('/api/participant', methods=['POST'])
 def participant():
     """
     Form a JSON response with details for the jury participant associated with
@@ -199,7 +199,7 @@ def participant():
     return response
 
 
-@app.errorhandler(400)
+@application.errorhandler(400)
 def bad_request(error):
     """Handle a bad request error with a JSON response."""
     
@@ -210,7 +210,7 @@ def bad_request(error):
     }
 
 
-@app.errorhandler(500)
+@application.errorhandler(500)
 def internal_server_error(error):
     """Handle an internal server error with a JSON response."""
 
