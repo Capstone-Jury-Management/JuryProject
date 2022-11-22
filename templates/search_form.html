@@ -3,11 +3,71 @@
 {% block title %} Search {% endblock %}
 
 {% block content %}
+
+<html>
+
+<head>
+<script>
+    function validateForm() {
+
+        if ( document.forms["form-input"]["first_name"].value !== "") {
+            let first_name = document.forms["form-input"]["first_name"].value;
+
+            if (first_name == "" || first_name.length < 3 || first_name.length > 12 ) {
+            alert("Please check the length of the first name you entered and try again!");
+            return false;
+            }
+            }
+        if ( document.forms["form-input"]["last_name"].value !== "") {
+            let last_name = document.forms["form-input"]["last_name"].value;
+
+            if (last_name == "" || last_name.length < 3 || last_name.length > 16 ) {
+            alert("Please check the length of the last name you entered and try again!");
+            return false;
+            }
+
+            }
+            /*  this DOB validation causes an error with SSN and MVC ID checking
+         if ( document.forms["form-input"]["date_of_birth"].value !== "") {
+            let date_of_birth = document.forms["form-input"]["date_of_birth"].value;
+
+            if (date_of_birth == "" ) {
+            alert("Please check the date of birth you entered and try again!");
+            return false;
+            }
+            }
+            */
+
+        if ( document.forms["form-input"]["ssn"].value !== "") {
+            let social = document.forms["form-input"]["ssn"].value;
+            if (social.length != 9 || social.length !=11 ) {
+            alert("Please check the length of the SSN you entered and try again!");
+            return false;
+            }
+            }
+
+        if ( document.forms["form-input"]["mvc_id"].value !== "") {
+            let mvc_id = document.forms["form-input"]["mvc_id"].value;
+
+            if (mvc_id.length < 10 ) {
+            alert("Please check the length of the MVC ID number you entered and try again!");
+            return false;
+            }
+
+            }
+
+      }
+
+    </script>
+
+</head>
+
+<body> </body>
 <div class="row justify-content-center">
     <div class="col-6">
 
        <h4>Encrypted Juror Data Search Utility</h4>
-       <form action="{{ url_for('search_results') }}" method="POST">
+       <form name="form-input" action="{{ url_for('search_results') }}" method="POST" onsubmit= " return validateForm() " >
        <label >First Name </label> <br>
        <input type="text"  name="first_name" class="col-sm-9 col-form-label";?> <br>
 
@@ -23,8 +83,12 @@
        <label>MVC Number</label><br>
        <input type="text" name="mvc_id" class="col-sm-9 col-form-label";?><br>
 
-       <br><input type="submit" name="save" value="Search"  class="btn btn-primary";?><br>
+       <br> <input type="submit" value="Search"class="btn btn-primary";?><br>
        </form>
     </div>
 </div>
+
+</body>
+
+</html>
 {% endblock %}
