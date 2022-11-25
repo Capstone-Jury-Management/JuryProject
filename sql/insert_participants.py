@@ -48,26 +48,32 @@ def random_participant():
     fake = Faker()
     participant = {}
     county, city = random_nj_county_city()
+    gender = random.choice(('Male', 'Female'))
 
     participant['summons_date'] = str(fake.date_this_year())
     participant['undeliverable'] = 0
     participant['perm_disq'] = 0
-    participant['last_name'] = fake.name().split()[1]
+    participant['last_name'] = fake.last_name()
     # suffix
-    participant['first_name'] = fake.name().split()[0]
-    participant['middle_name'] = fake.name().split()[0]
+    if (gender == 'Male'):
+        participant['first_name'] = fake.first_name_male()
+        participant['middle_name'] = fake.first_name_male()
+    else:
+        participant['first_name'] = fake.first_name_female()
+        participant['middle_name'] = fake.first_name_female()
     participant['address'] = fake.street_address()
     participant['city'] = city
     participant['state'] = 'NJ'
     participant['zip'] = fake.postcode()
     participant['county'] = county
-    participant['dob'] = tokenize(str(fake.date_of_birth(minimum_age=18)))
+    participant['dob'] = tokenize(str(fake.date_of_birth(minimum_age=18, 
+                                                         maximum_age=80)))
     participant['drivers_state'] = 'NJ'
     # voters_no
     participant['ssn'] = tokenize(fake.ssn().replace('-', ''))
     participant['race'] = random_race()
     participant['mvc_id'] = tokenize(random_mvc_id())
-    participant['gender'] = random.choice(('Male', 'Female'))
+    participant['gender'] = gender
     if (participant['race'] == 'Hispanic' or participant['race'] == 'Latino'):
         participant['hispanic'] = 1
     else:
