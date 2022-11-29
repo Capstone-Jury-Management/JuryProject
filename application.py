@@ -35,8 +35,7 @@ def search_results():
         'middle_name': 'Middle Name',
         'first_name': 'First Name',
         'dob': 'Date of Birth',
-        'ssn': 'SSN',
-        'mvc_id': 'DMV Number'
+        'ssn': 'SSN'
     }
     return render_template('entities.html', title='Search Results',
                            entities=response['participants'], key_map=key_map)
@@ -53,19 +52,29 @@ def juror_details(id):
                                entity=error, key_map=None)
 
     key_map = {
-        'participant_id': 'ID',
         'summons_date': 'Summons Date',
-        'undeliverable': 'Undeliverable',  # 1 is Yes. Use an if statement?
-        'last_name': 'Last Name',          # We should display the values
-        'first_name': 'First Name',        # directly instead of using a loop
-        'address': 'Street Address',       # in the entity.html template so we
-        'city': 'City',                    # can do this.
+        'undeliverable': 'Undeliverable',
+        'last_name': 'Last Name',
+        'first_name': 'First Name',
+        'middle_name': 'Middle Name',
+        'address': 'Address',
+        'city': 'City',
         'state': "State",
         'zip': 'Zip',
         'county': 'County',
         'dob': 'Date of Birth',
         'ssn': 'SSN',
-        'mvc_id': "MVC Number"
+        'race': 'Race',
+        'mvc_id': 'MVC ID',
+        'gender': 'Gender',
+        'hispanic': 'Hispanic',
+        'home_phone': 'Home Phone',
+        'mobile_phone': 'Mobile Phone',
+        'work_phone': 'Work Phone',
+        'work_phone_ext': 'Work Phone Ext.',
+        'email': 'Email',
+        'gov_employee': 'Government Employee',
+        'occupation': 'Occupation'
     }
 
     return render_template('entity.html', title='Juror Details', 
