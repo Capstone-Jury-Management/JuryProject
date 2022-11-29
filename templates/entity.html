@@ -10,11 +10,5 @@
             <dd class="col-sm-9">{{ entity[key] }}</dd>
         {% endif %}
     {% endfor %}
-    {% for key in entity %}
-        {% if key not in key_map %}
-            <dt class="col-sm-3">{{ key }}</dt>
-            <dd class="col-sm-9">{{ entity[key] }}</dd>
-        {% endif %}
-    {% endfor %}
     </dl>
 {% endblock %}
