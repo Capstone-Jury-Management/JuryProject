@@ -32,8 +32,8 @@ def search_results():
     key_map = {
         'participant_id': 'ID',
         'last_name': 'Last Name',
-        'middle_name': 'Middle Name',
         'first_name': 'First Name',
+        'middle_name': 'Middle Name',
         'dob': 'Date of Birth',
         'ssn': 'SSN'
     }

@@ -3,6 +3,11 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
+<div style="display: flex; justify-content: center; position: relative;">
+    <h4 style="text-align: center">Juror Information Page</h4>
+    <button onclick="history.back()" class="btn btn-primary" style="position: absolute; left: 0; margin-top: 1px;">Previous Page</button>
+</div>
+<br><br>
     <dl class="row">
     {% for key in key_map %}
         {% if key in entity %}
