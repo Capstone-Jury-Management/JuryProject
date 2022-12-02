@@ -30,10 +30,8 @@ def search_results():
         response['participants'] = list()
 
     key_map = {
-        'participant_id': 'ID',
         'last_name': 'Last Name',
         'first_name': 'First Name',
-        'middle_name': 'Middle Name',
         'dob': 'Date of Birth',
         'ssn': 'SSN'
     }
@@ -51,11 +49,18 @@ def juror_details(id):
         return render_template('entity.html', title='Juror Details', 
                                entity=error, key_map=None)
 
+    response['full_name'] = (response['last_name'] + ', ' 
+                             + response['first_name'] + ' '
+                             + response['middle_name'][0] + '.')
+    response['ssn'] = (response['ssn'][:3] + '-'
+                       + response['ssn'][3:5] + '-'
+                       + response['ssn'][5:])
+    response['home_phone'] = format_phone(response['home_phone'])
+    response['work_phone'] = format_phone(response['work_phone'])
+    response['mobile_phone'] = format_phone(response['mobile_phone'])
+
     key_map = {
-        'summons_date': 'Summons Date',
-        'last_name': 'Last Name',
-        'first_name': 'First Name',
-        'middle_name': 'Middle Name',
+        'full_name': 'Name',
         'address': 'Address',
         'city': 'City',
         'state': "State",
@@ -78,6 +83,10 @@ def juror_details(id):
 
     return render_template('entity.html', title='Juror Details', 
                            entity=response, key_map=key_map)
+
+
+def format_phone(phone):
+    return '(' + phone[:3] + ') ' + phone[3:6] + '-' + phone[6:]
 
 
 # Backend Routes
@@ -146,6 +155,9 @@ def search():
             row['middle_name'] = ptr[2]
             row['last_name'] = ptr[3]
             row['dob'] = detokenize(ptr[4])
+            row['dob'] = (row['dob'][5:7] + '/'
+                          + row['dob'][8:] + '/'
+                          + row['dob'][:4])
             row['ssn'] = '***-**-' + detokenize(ptr[5])[-4:]
             participants.append(row)
         response['participants'] = participants
@@ -191,8 +203,13 @@ def participant():
         row = cursor.fetchone()
         key = cursor.column_names
         for i in range(len(row)):
-            if key[i] == 'dob' or key[i] == 'ssn' or key[i] == 'mvc_id':
+            if key[i] == 'ssn' or key[i] == 'mvc_id':
                 response[key[i]] = detokenize(row[i])
+            elif key[i] == 'dob':
+                response[key[i]] = detokenize(row[i])
+                response['dob'] = (response['dob'][5:7] + '/'
+                                   + response['dob'][8:] + '/'
+                                   + response['dob'][:4])
             else:
                 response[key[i]] = row[i]
 

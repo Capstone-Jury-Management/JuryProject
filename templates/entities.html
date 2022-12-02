@@ -3,22 +3,18 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
+<br>
 <div style="display: flex; justify-content: center; position: relative;">
-    <h4 style="text-align: center">Jury Participant Search Form</h4>
-    <button onclick="history.back()" class="btn btn-primary" style="position: absolute; left: 0; margin-top: 1px;">Previous Page</button>
+    <h4 style="text-align: center">Search Results</h4>
+    <button onclick="history.back()" class="btn btn-primary" style="position: absolute; left: 0; margin-top: 1px;">Back</button>
 </div>
-<br><br>
-    <table class="table">
+<br>
+    <table class="table table-striped">
         <thead>
             <tr>
                 {% for key in key_map %}
                     {% if key in entities[0] %}
                         <th scope="col">{{ key_map[key] }}</th>
-                    {% endif %}
-                {% endfor %}
-                {% for key in entities[0] %}
-                    {% if key not in key_map %}
-                        <th scope="col">{{ key }}</th>
                     {% endif %}
                 {% endfor %}
             </tr>
@@ -28,11 +24,6 @@
                 <tr class="clickable" onclick="window.location='{{ request.host_url[:-1] + url_for('juror_details', id=entity['participant_id']) }}'">
                     {% for key in key_map %}
                         {% if key in entity %}
-                            <td>{{ entity[key] }}</td>
-                        {% endif %}
-                    {% endfor %}
-                    {% for key in entity %}
-                        {% if key not in key_map %}
                             <td>{{ entity[key] }}</td>
                         {% endif %}
                     {% endfor %}
