@@ -72,7 +72,7 @@
 
         <h4>Jury Participant Search Form</h4>
         <form name="form-input" action="{{ url_for('search_results') }}"
-            method="POST" onsubmit="return validateForm()">
+            method="POST" onsubmit="return validateForm()" autocomplete="off">
         <label >First Name </label> <br>
         <input type="text" name="first_name" class="col-sm-9 col-form-label";?> <br><br>
 
@@ -88,7 +88,7 @@
         <label>MVC ID</label><br>
         <input type="text" name="mvc_id" class="col-sm-9 col-form-label";?><br><br>
 
-        <br> <input type="submit" value="Search"class="btn btn-primary"><br>
+        <br> <input type="submit" value="Search"class="btn btn-primary" style="float: right;"><br>
         </form>
     </div>
 </div>
