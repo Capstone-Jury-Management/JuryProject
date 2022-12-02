@@ -66,32 +66,34 @@
     }
 </script>
 </head>
-<body> </body>
+<body>
+<br>
 <div class="row justify-content-center">
     <div class="col-6">
-
-        <h4>Jury Participant Search Form</h4>
+        <h4 style="white-space: nowrap;">Jury Participant Search</h4><br>
         <form name="form-input" action="{{ url_for('search_results') }}"
             method="POST" onsubmit="return validateForm()" autocomplete="off">
-        <label >First Name </label> <br>
-        <input type="text" name="first_name" class="col-sm-9 col-form-label";?> <br><br>
+            
+        <label >First Name </label><br>
+        <input type="text" name="first_name" class="col-12 col-form-label";?> <br><br>
 
         <label>Last Name</label><br>
-        <input type="text" name="last_name" class="col-sm-9 col-form-label";?><br><br>
+        <input type="text" name="last_name" class="col-12 col-form-label";?><br><br>
 
         <label>Date of Birth</label><br>
-        <input type="date" name="dob" class="col-sm-9" style="height: 45px";?><br><br>
+        <input type="date" name="dob" class="col-12" style="height: 43px";?><br><br>
 
         <label>SSN</label><br>
-        <input type="text" name="ssn" class="col-sm-9 col-form-label";?><br><br>
+        <input type="text" name="ssn" class="col-12 col-form-label";?><br><br>
 
         <label>MVC ID</label><br>
-        <input type="text" name="mvc_id" class="col-sm-9 col-form-label";?><br><br>
+        <input type="text" name="mvc_id" class="col-12 col-form-label";?><br><br><br>
 
-        <br> <input type="submit" value="Search"class="btn btn-primary" style="float: right;"><br>
+        <input type="submit" value="Search" class="btn btn-primary" style="float: right;">
         </form>
     </div>
 </div>
+<br>
 </body>
 </html>
 

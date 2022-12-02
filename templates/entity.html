@@ -3,16 +3,25 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
+<br>
 <div style="display: flex; justify-content: center; position: relative;">
-    <h4 style="text-align: center">Juror Information Page</h4>
-    <button onclick="history.back()" class="btn btn-primary" style="position: absolute; left: 0; margin-top: 1px;">Previous Page</button>
+    <h4 style="text-align: center">Participant Details</h4>
+    <button onclick="history.back()" class="btn btn-primary" style="position: absolute; left: 0; margin-top: 1px;">Back</button>
 </div>
-<br><br>
+<br>
     <dl class="row">
     {% for key in key_map %}
         {% if key in entity %}
             <dt class="col-sm-3">{{ key_map[key] }}</dt>
-            <dd class="col-sm-9">{{ entity[key] }}</dd>
+            {% if entity[key] == 1: %}
+                <dd class="col-sm-9"> Yes </dd>
+            {% elif entity[key] == 0: %}
+                <dd class="col-sm-9"> No </dd>
+            {% elif entity[key] == '' %}
+                <dd class="col-sm-9"> N/A </dd>
+            {% else %}
+                <dd class="col-sm-9"> {{ entity[key] }} </dd>
+            {% endif %}
         {% endif %}
     {% endfor %}
     </dl>
