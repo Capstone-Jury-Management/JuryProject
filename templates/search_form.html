@@ -1,31 +1,100 @@
 {% extends 'base.html' %}
-
 {% block title %} Search {% endblock %}
-
 {% block content %}
+
+<html>
+<head>
+<script>
+    function validateForm() {
+        let first_name = document.forms["form-input"]["first_name"].value;
+        let last_name = document.forms["form-input"]["last_name"].value;
+        let dob = document.forms["form-input"]["dob"].value;
+        let social = document.forms["form-input"]["ssn"].value;
+        let mvc_id = document.forms["form-input"]["mvc_id"].value;
+
+        if (!first_name && !last_name && !dob && !social && !mvc_id) {
+            alert("At least 1 search field is required!");
+            return false;
+        }
+
+        if (first_name) {
+            if (first_name.length < 2 || first_name.length > 31) {
+                alert("Please check the length of the first name you entered "
+                      + "and try again!");
+                return false;
+            }
+        }
+
+        if (last_name) {
+            if (last_name.length < 2 || last_name.length > 31) {
+                alert("Please check the length of the last name you entered "
+                      + "and try again!");
+                return false;
+            }
+        }
+        
+        if (dob) {
+            var date_dob = new Date(dob);
+            var date_limit = new Date();
+
+            date_limit.setFullYear(date_limit.getFullYear() - 18);
+            if (date_dob.getTime() > date_limit.getTime()) {
+                alert("Please check the date of birth you entered and try "
+                      + "again! Jury participants must be at least 18 years "
+                      + "of age.");
+                return false;
+            }
+        }
+
+        if (social) {
+            if (social.length != 9) {
+                alert("Please check the length of the SSN you entered and try "
+                      + "again! The SSN must be 9 digits long.");
+                return false;
+            }
+        }
+
+        if (mvc_id) {
+            if (mvc_id.length < 10) {
+                alert("Please check the length of the MVC ID you entered and "
+                      + "try again! The MVC ID must be 15 characters long.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+</script>
+</head>
+<body>
+<br>
 <div class="row justify-content-center">
     <div class="col-6">
+        <h4 style="white-space: nowrap;">Jury Participant Search</h4><br>
+        <form name="form-input" action="{{ url_for('search_results') }}"
+            method="POST" onsubmit="return validateForm()" autocomplete="off">
+            
+        <label >First Name </label><br>
+        <input type="text" name="first_name" class="col-12 col-form-label";?> <br><br>
 
-       <h4>Encrypted Juror Data Search Utility</h4>
-       <form action="{{ url_for('search_results') }}" method="POST">
+        <label>Last Name</label><br>
+        <input type="text" name="last_name" class="col-12 col-form-label";?><br><br>
 
-       <label >First Name </label> <br>
-       <input type="text"  name="first_name" class="col-sm-9 col-form-label";?> <br>
+        <label>Date of Birth</label><br>
+        <input type="date" name="dob" class="col-12" style="height: 43px";?><br><br>
 
-       <label>Last Name</label><br>
-       <input type="text"  name="last_name" class="col-sm-9 col-form-label";?><br>
+        <label>SSN</label><br>
+        <input type="text" name="ssn" class="col-12 col-form-label";?><br><br>
 
-       <label>Date of Birth</label><br>
-       <input type="date"  name="date_of_birth" class="col-sm-9" ;?><br>
-      
-       <label>Phone</label><br>
-       <input type="text"  name="phone" class="col-sm-9 col-form-label";?><br>
+        <label>MVC ID</label><br>
+        <input type="text" name="mvc_id" class="col-12 col-form-label";?><br><br><br>
 
-       <label>SSN</label><br>
-       <input type="text" name="ssn" class="col-sm-9 col-form-label";?><br>
-
-       <br> <input type="submit" name="save" value="Search"  class="btn btn-primary";?><br>
-       </form>
+        <input type="submit" value="Search" class="btn btn-primary" style="float: right;">
+        </form>
     </div>
 </div>
+<br>
+</body>
+</html>
+
 {% endblock %}
